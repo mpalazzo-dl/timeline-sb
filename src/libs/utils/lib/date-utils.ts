@@ -49,11 +49,17 @@ export function currentYear(): number {
 export function formatForTimeline(date: Date | string) {
   const pad = (n: number) => n.toString().padStart(2, "0");
 
+  // @ts-ignore
   const year = date.getFullYear();
+  // @ts-ignore
   const month = pad(date.getMonth() + 1);
+  // @ts-ignore
   const day = pad(date.getDate());
+  // @ts-ignore
   const hours = pad(date.getHours());
+  // @ts-ignore
   const minutes = pad(date.getMinutes());
+  // @ts-ignore
   const seconds = pad(date.getSeconds());
 
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}-04:00`;

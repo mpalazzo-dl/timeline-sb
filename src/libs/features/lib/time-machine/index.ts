@@ -1,1 +1,1 @@
-export * from "./timeline-date-picker.tsx";
+export * from "./timeline-date-picker";
