@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+import { useTimelineState } from "@aces/store";
 import { CfFetchById } from "@aces/types";
 
 import { fetchHeroBanner } from "./services";
 import { CfHeroBannerSkeleton } from "./skeleton";
 import { CfHeroBannerUI } from "./ui";
-import { useTimelineState } from "@aces/store";
 
 export const CfHeroBannerClient = ({ id, preview, lang }: CfFetchById) => {
   const timelineDate =

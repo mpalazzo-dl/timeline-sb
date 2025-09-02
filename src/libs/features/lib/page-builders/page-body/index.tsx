@@ -32,7 +32,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
   if (!items) {
     return null;
   }
-
+  console.log(items);
   return (
     <>
       {items.map((item, index) => {
@@ -46,7 +46,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Accordions":
             return (
               <CfAccordions
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -56,7 +56,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Banner":
             return (
               <CfBanner
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -66,7 +66,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Callout":
             return (
               <CfCallout
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -76,7 +76,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "CodeEmbed":
             return (
               <CfCodeEmbed
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -86,7 +86,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "FeatureHighlight":
             return (
               <CfFeatureHighlight
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -96,7 +96,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Form":
             return (
               <CfForm
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -106,7 +106,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Grid":
             return (
               <CfGrid
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -116,7 +116,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Header":
             return (
               <CfHeader
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -136,7 +136,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Image":
             return (
               <CfImage
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -146,7 +146,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "ListItem":
             return (
               <CfListItem
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -156,7 +156,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Lockup":
             return (
               <CfLockup
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -166,7 +166,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "RichTextSection":
             return (
               <CfRichTextSection
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -176,7 +176,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "TeamListing":
             return (
               <CfTeamListing
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -186,7 +186,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "Testimonials":
             return (
               <CfTestimonials
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}
@@ -196,7 +196,7 @@ export const PageBody = ({ items, preview, lang }: PageBodyProps) => {
           case "VideoEmbed":
             return (
               <CfVideoEmbed
-                render="server"
+                render="client"
                 id={item?.sys?.id || ""}
                 preview={preview}
                 lang={lang}

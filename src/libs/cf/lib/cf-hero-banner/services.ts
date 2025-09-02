@@ -56,8 +56,6 @@ export const fetchHeroBanner = async (
       variables: { id, preview, locale },
     });
 
-    console.log(response.data.heroBanner);
-
     return response.data.heroBanner;
   } catch (error) {
     console.error("Error fetching data:", error);

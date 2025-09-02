@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { useTimelineState } from "@aces/store";
+
 import { CfLockupWrapperProps } from ".";
 import { fetchLockup } from "./services";
 import { CfLockupSkeleton } from "./skeleton";
@@ -13,15 +15,19 @@ export const CfLockupClient = ({
   lang,
   nested,
 }: CfLockupWrapperProps) => {
+  const timelineDate =
+    useTimelineState((state) => state.simulationDate) ||
+    new Date().toISOString();
+
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetchLockup(id, preview, lang)
+    fetchLockup(id, true, lang, timelineDate)
       .then(setData)
       .catch((err) => {
         console.error("Client fetch failed:", err);
       });
-  }, [id, preview, lang]);
+  }, [id, preview, lang, timelineDate]);
 
   if (!data) return <CfLockupSkeleton />;
 

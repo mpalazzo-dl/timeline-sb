@@ -20,31 +20,45 @@ export const TestimonialFragment = gql`
   }
 `;
 
-export const TestimonialsQuery = gql`
-  ${TestimonialFragment}
+export const buildTestimonialsQuery = (timestamp?: string) => {
+  const now = new Date();
+  const includeTimeline =
+    timestamp && new Date(timestamp) > now
+      ? `@timeline(where: { timestamp_lte: "${timestamp}" })`
+      : "";
 
-  query ($id: String!, $preview: Boolean!, $locale: String) {
-    testimonials(id: $id, preview: $preview, locale: $locale) {
-      internalTitle
-      headline
-      testimonialsCollection {
-        items {
-          ...Testimonial
+  return gql`
+    ${TestimonialFragment}
+
+    query ($id: String!, $preview: Boolean!, $locale: String) 
+    ${includeTimeline} {
+      testimonials(id: $id, preview: $preview, locale: $locale) {
+        internalTitle
+        headline
+        testimonialsCollection {
+          items {
+            ...Testimonial
+          }
+        }
+        sys {
+          id
         }
       }
-      sys {
-        id
-      }
     }
-  }
-`;
+  `;
+};
 
 export const fetchTestimonialsData = async (
   id: string,
   preview = false,
   locale: string = defaultLocale,
+  date?: string,
 ) => {
   const client = preview ? cfPreviewClient : cfClient;
+  const timestamp = date || new Date().toISOString();
+
+  const TestimonialsQuery = buildTestimonialsQuery(timestamp);
+
   try {
     const response = await client.query({
       query: TestimonialsQuery,

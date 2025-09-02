@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useTimelineState } from "@aces/store";
 import { CfFetchById } from "@aces/types";
 
 import { fetchFeatureHighlightData } from "./services";
@@ -13,15 +14,19 @@ export const CfFeatureHighlightClient = ({
   preview,
   lang,
 }: CfFetchById) => {
+  const timelineDate =
+    useTimelineState((state) => state.simulationDate) ||
+    new Date().toISOString();
+
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetchFeatureHighlightData(id, preview, lang)
+    fetchFeatureHighlightData(id, true, lang, timelineDate)
       .then(setData)
       .catch((err) => {
         console.error("Client fetch failed:", err);
       });
-  }, [id, preview, lang]);
+  }, [id, preview, lang, timelineDate]);
 
   if (!data) return <CfFeatureHighlightSkeleton />;
   console.log(data);

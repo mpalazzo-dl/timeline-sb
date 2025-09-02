@@ -15,12 +15,38 @@ export const CodeEmbedQuery = gql`
   }
 `;
 
+export const buildCodeEmbedQuery = (timestamp?: string) => {
+  const now = new Date();
+  const includeTimeline =
+    timestamp && new Date(timestamp) > now
+      ? `@timeline(where: { timestamp_lte: "${timestamp}" })`
+      : "";
+
+  return gql`
+    query ($id: String!, $preview: Boolean!) 
+    ${includeTimeline}{
+      codeEmbed(id: $id, preview: $preview) {
+        internalTitle
+        embedCode
+        sys {
+          id
+        }
+      }
+    }
+  `;
+};
+
 export const fetchCodeEmbedData = async (
   id: string,
   preview = false,
   locale: string = defaultLocale,
+  date?: string,
 ) => {
   const client = preview ? cfPreviewClient : cfClient;
+  const timestamp = date || new Date().toISOString();
+
+  const CodeEmbedQuery = buildCodeEmbedQuery(timestamp);
+
   try {
     const response = await client.query({
       query: CodeEmbedQuery,

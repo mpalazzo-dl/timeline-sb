@@ -22,22 +22,35 @@ export const ButtonListFragment = gql`
   }
 `;
 
-export const ButtonListQuery = gql`
-  ${CfButtonFragment}
+export const buildButtonListQuery = (timestamp?: string) => {
+  const now = new Date();
+  const includeTimeline =
+    timestamp && new Date(timestamp) > now
+      ? `@timeline(where: { timestamp_lte: "${timestamp}" })`
+      : "";
 
-  query ($id: String!, $preview: Boolean!, $locale: String) {
-    buttonList(id: $id, preview: $preview, locale: $locale) {
-      ...ButtonList
+  return gql`
+     ${CfButtonFragment}
+
+    query ($id: String!, $preview: Boolean!, $locale: String)
+    ${includeTimeline} {
+      buttonList(id: $id, preview: $preview, locale: $locale) {
+        ...ButtonList
+      }
     }
-  }
-`;
+  `;
+};
 
 export const fetchButtonListData = async (
   id: string,
   preview = false,
   locale: string = defaultLocale,
+  date?: string,
 ) => {
   const client = preview ? cfPreviewClient : cfClient;
+  const timestamp = date || new Date().toISOString();
+
+  const ButtonListQuery = buildButtonListQuery(timestamp);
   try {
     const response = await client.query({
       query: ButtonListQuery,

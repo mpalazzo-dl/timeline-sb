@@ -1,5 +1,6 @@
 "use client";
 
+import { useTimelineState } from "@aces/store";
 import { useEffect, useState } from "react";
 
 import {
@@ -19,15 +20,19 @@ export const CfImageClient = ({
   responsive,
   style,
 }: CfImageWrapperProps) => {
+  const timelineDate =
+    useTimelineState((state) => state.simulationDate) ||
+    new Date().toISOString();
+
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetchImageData(id, preview, lang)
+    fetchImageData(id, true, lang, timelineDate)
       .then(setData)
       .catch((err) => {
         console.error("Client fetch failed:", err);
       });
-  }, [id, preview, lang]);
+  }, [id, preview, lang, timelineDate]);
 
   if (!data) return <CfImageSkeleton />;
   console.log(data);

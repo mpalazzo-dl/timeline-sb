@@ -32,12 +32,55 @@ export const GridQuery = gql`
   }
 `;
 
+export const buildGridQuery = (timestamp?: string) => {
+  const now = new Date();
+  const includeTimeline =
+    timestamp && new Date(timestamp) > now
+      ? `@timeline(where: { timestamp_lte: "${timestamp}" })`
+      : "";
+
+  return gql`
+    query ($id: String!, $preview: Boolean!, $locale: String) 
+    ${includeTimeline}{
+      grid(id: $id, preview: $preview, locale: $locale) {
+        internalTitle
+        gridColumnCount
+        gridItemsStyle
+        verticalAlignment
+        listItemsCollection {
+          items {
+            ... on Image {
+              sys {
+                id
+              }
+            }
+            ... on RichTextSection {
+              backgroundColor
+              sys {
+                id
+              }
+            }
+          }
+        }
+        sys {
+          id
+        }
+      }
+    }
+  `;
+};
+
 export const fetchGridData = async (
   id: string,
   preview = false,
   locale: string = defaultLocale,
+  date?: string,
 ) => {
   const client = preview ? cfPreviewClient : cfClient;
+  const timestamp = date || new Date().toISOString();
+
+  const GridQuery = buildGridQuery(timestamp);
+
   try {
     const response = await client.query({
       query: GridQuery,

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useTimelineState } from "@aces/store";
 import { CfFetchByIdNested } from "@aces/types";
 
 import { fetchAccordionsData } from "./services";
@@ -14,18 +15,21 @@ export const CfAccordionsClient = ({
   lang,
   nested,
 }: CfFetchByIdNested) => {
+  const timelineDate =
+    useTimelineState((state) => state.simulationDate) ||
+    new Date().toISOString();
+
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetchAccordionsData(id, preview, lang)
+    fetchAccordionsData(id, true, lang, timelineDate)
       .then(setData)
       .catch((err) => {
         console.error("Client fetch failed:", err);
       });
-  }, [id, preview, lang]);
+  }, [id, preview, lang, timelineDate]);
 
   if (!data) return <CfAccordionsSkeleton />;
-  console.log(data);
 
   return (
     <CfAccordionsUI

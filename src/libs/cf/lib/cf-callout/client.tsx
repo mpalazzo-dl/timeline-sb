@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useTimelineState } from "@aces/store";
 import { CfFetchById } from "@aces/types";
 
 import { fetchCalloutData } from "./services";
@@ -9,15 +10,19 @@ import { CfCalloutSkeleton } from "./skeleton";
 import { CfCalloutUI } from "./ui";
 
 export const CfCalloutClient = ({ id, preview, lang }: CfFetchById) => {
+  const timelineDate =
+    useTimelineState((state) => state.simulationDate) ||
+    new Date().toISOString();
+
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetchCalloutData(id, preview, lang)
+    fetchCalloutData(id, true, lang, timelineDate)
       .then(setData)
       .catch((err) => {
         console.error("Client fetch failed:", err);
       });
-  }, [id, preview, lang]);
+  }, [id, preview, lang, timelineDate]);
 
   if (!data) return <CfCalloutSkeleton />;
   console.log(data);

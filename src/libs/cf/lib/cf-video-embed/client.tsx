@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { useTimelineState } from "@aces/store";
+
 import { CfVideoEmbedWrapperProps } from ".";
 import { fetchVideoEmbedData } from "./services";
 import { CfVideoEmbedSkeleton } from "./skeleton";
@@ -13,15 +15,19 @@ export const CfVideoEmbedClient = ({
   lang,
   nested,
 }: CfVideoEmbedWrapperProps) => {
+  const timelineDate =
+    useTimelineState((state) => state.simulationDate) ||
+    new Date().toISOString();
+
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetchVideoEmbedData(id, preview, lang)
+    fetchVideoEmbedData(id, true, lang, timelineDate)
       .then(setData)
       .catch((err) => {
         console.error("Client fetch failed:", err);
       });
-  }, [id, preview, lang]);
+  }, [id, preview, lang, timelineDate]);
 
   if (!data) return <CfVideoEmbedSkeleton />;
 

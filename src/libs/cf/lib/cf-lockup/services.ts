@@ -39,22 +39,36 @@ export const LockupFragement = gql`
   }
 `;
 
-export const LockupQuery = gql`
-  ${LockupFragement}
+export const buildLockupQuery = (timestamp?: string) => {
+  const now = new Date();
+  const includeTimeline =
+    timestamp && new Date(timestamp) > now
+      ? `@timeline(where: { timestamp_lte: "${timestamp}" })`
+      : "";
 
-  query ($id: String!, $preview: Boolean!, $locale: String) {
-    lockup(id: $id, preview: $preview, locale: $locale) {
-      ...Lockup
+  return gql`
+    ${LockupFragement}
+
+    query ($id: String!, $preview: Boolean!, $locale: String) 
+    ${includeTimeline} {
+      lockup(id: $id, preview: $preview, locale: $locale) {
+        ...Lockup
+      }
     }
-  }
-`;
+  `;
+};
 
 export const fetchLockup = async (
   id: string,
   preview = false,
   locale: string = defaultLocale,
+  date?: string,
 ) => {
   const client = preview ? cfPreviewClient : cfClient;
+  const timestamp = date || new Date().toISOString();
+
+  const LockupQuery = buildLockupQuery(timestamp);
+
   try {
     const response = await client.query({
       query: LockupQuery,

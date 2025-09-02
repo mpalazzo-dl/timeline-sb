@@ -24,31 +24,45 @@ export const TeamMemberFragment = gql`
   }
 `;
 
-export const TeamListingQuery = gql`
-  ${TeamMemberFragment}
+export const buildTeamListingQuery = (timestamp?: string) => {
+  const now = new Date();
+  const includeTimeline =
+    timestamp && new Date(timestamp) > now
+      ? `@timeline(where: { timestamp_lte: "${timestamp}" })`
+      : "";
 
-  query ($id: String!, $preview: Boolean!, $locale: String) {
-    teamListing(id: $id, preview: $preview, locale: $locale) {
-      internalTitle
-      headline
-      teamMembersCollection {
-        items {
-          ...TeamMember
+  return gql`
+    ${TeamMemberFragment}
+
+    query ($id: String!, $preview: Boolean!, $locale: String) 
+    ${includeTimeline}{
+      teamListing(id: $id, preview: $preview, locale: $locale) {
+        internalTitle
+        headline
+        teamMembersCollection {
+          items {
+            ...TeamMember
+          }
+        }
+        sys {
+          id
         }
       }
-      sys {
-        id
-      }
     }
-  }
-`;
+  `;
+};
 
 export const fetchTeamListingData = async (
   id: string,
   preview = false,
   locale: string = defaultLocale,
+  date?: string,
 ) => {
   const client = preview ? cfPreviewClient : cfClient;
+  const timestamp = date || new Date().toISOString();
+
+  const TeamListingQuery = buildTeamListingQuery(timestamp);
+
   try {
     const response = await client.query({
       query: TeamListingQuery,

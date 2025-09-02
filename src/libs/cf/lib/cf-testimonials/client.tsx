@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { useTimelineState } from "@aces/store";
+
 import { CfTestimonialsWrapperProps } from ".";
 import { fetchTestimonialsData } from "./services";
 import { CfTestimonialsSkeleton } from "./skeleton";
@@ -12,15 +14,19 @@ export const CfTestimonalsClient = ({
   preview,
   lang,
 }: CfTestimonialsWrapperProps) => {
+  const timelineDate =
+    useTimelineState((state) => state.simulationDate) ||
+    new Date().toISOString();
+
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetchTestimonialsData(id, preview, lang)
+    fetchTestimonialsData(id, true, lang, timelineDate)
       .then(setData)
       .catch((err) => {
         console.error("Client fetch failed:", err);
       });
-  }, [id, preview, lang]);
+  }, [id, preview, lang, timelineDate]);
 
   if (!data) return <CfTestimonialsSkeleton />;
 

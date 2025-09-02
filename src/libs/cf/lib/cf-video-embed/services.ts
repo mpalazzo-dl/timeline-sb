@@ -13,22 +13,36 @@ export const VideoEmbedFragment = gql`
   }
 `;
 
-export const VideoEmbedQuery = gql`
-  ${VideoEmbedFragment}
+export const buildVideoEmbedQuery = (timestamp?: string) => {
+  const now = new Date();
+  const includeTimeline =
+    timestamp && new Date(timestamp) > now
+      ? `@timeline(where: { timestamp_lte: "${timestamp}" })`
+      : "";
 
-  query ($id: String!, $preview: Boolean!) {
-    videoEmbed(id: $id, preview: $preview) {
-      ...VideoEmbed
+  return gql`
+    ${VideoEmbedFragment}
+
+    query ($id: String!, $preview: Boolean!) 
+    ${includeTimeline} {
+      videoEmbed(id: $id, preview: $preview) {
+        ...VideoEmbed
+      }
     }
-  }
-`;
+  `;
+};
 
 export const fetchVideoEmbedData = async (
   id: string,
   preview = false,
   locale: string = defaultLocale,
+  date?: string,
 ) => {
   const client = preview ? cfPreviewClient : cfClient;
+  const timestamp = date || new Date().toISOString();
+
+  const VideoEmbedQuery = buildVideoEmbedQuery(timestamp);
+
   try {
     const response = await client.query({
       query: VideoEmbedQuery,
